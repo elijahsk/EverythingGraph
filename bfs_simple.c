@@ -110,7 +110,7 @@ static void bfs_pull(uint32_t n_id , struct thread_buffer* b) {
 	for(uint32_t idx = 0; idx < n->nb_in_edges; idx++) {
 		uint32_t dst_id = edge_array_in[n->incoming_edges + idx].dst;
 		uint8_t dst_label = edge_array_in[n->incoming_edges + idx].label;
-		if ((in_frontier[dst_id]) && (dst_label & labelSet)) {
+		if ((in_frontier[dst_id]) && ((1 << dst_label) & labelSet)) {
 			dist[n_id] += 1;
 			in_frontier_next[n_id] = 1;
 			b->current_buffer_index++;
@@ -126,7 +126,7 @@ static void bfs_push(uint32_t n_id, struct thread_buffer* b){
 	for(uint32_t idx = 0; idx < n->nb_out_edges; idx++) {
 		uint32_t dst_id = edge_array_out[n->outgoing_edges + idx].dst;
 		uint8_t dst_label = edge_array_out[n->outgoing_edges + idx].label;
-		if ((dist[dst_id] == 0) && (dst_label & labelSet)) {
+		if ((dist[dst_id] == 0) && ((1 << dst_label) & labelSet)) {
 			dist[dst_id] += 1;
 			if(__sync_bool_compare_and_swap(&in_frontier_next[dst_id], 0, 1)) {
 				thread_add_task(b, &nodes[dst_id]);
