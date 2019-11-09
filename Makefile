@@ -5,7 +5,7 @@ CC=g++
 LDFLAGS= -lm  -llapack -lblas -lnuma
 
 OBJ= random.o utils.o buffer.o  init_all.o
-ALGOS=sssp_pushpull spmv bfsgrid_cilk wcc prgrid_cilk pagerank_simple bfs_simple bfs_numa pr_numa 
+ALGOS=bfs_simple 
 DIRS= $(patsubst %, .%, $(ALGOS))
 MK= $(patsubst %, .%/Makefile, $(ALGOS))
 

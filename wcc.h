@@ -9,8 +9,8 @@ void *wcc_parallels(void* id);
 
 struct edge {
    uint32_t dst;
-#if WEIGHTED
-   uint32_t weight;
+#if LABELED
+   uint8_t label;
 #endif
 };
 

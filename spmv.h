@@ -10,8 +10,8 @@ extern uint32_t* value_in;
 extern uint32_t* value_out;
 struct edge {
    uint32_t dst;
-#if WEIGHTED
-   float weight;
+#if LABELED
+   uint8_t label;
 #endif
 };
 

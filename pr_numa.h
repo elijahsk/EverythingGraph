@@ -9,8 +9,8 @@ void prnuma_reset(struct node *nodes);
 
 struct edge{
 	uint32_t dst;
-#if WEIGHTED
-	float weight;
+#if LABEL
+	uint8_t label;
 #endif
 };
 

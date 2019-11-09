@@ -11,7 +11,7 @@ void sssp_reset(struct node *nodes);
 void sssp(struct node *nodes);
 struct edge {
     uint32_t dst;
-    float weight;
+    uint8_t label;
 };
 
 extern uint32_t* dist;

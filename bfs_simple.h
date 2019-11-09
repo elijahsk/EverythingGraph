@@ -13,8 +13,8 @@ void bfs_rerun(struct node *nodes);
 
 struct edge {
     uint32_t dst;
-#if WEIGHTED
-    float weight;
+#if LABELED
+    uint8_t label;
 #endif
 };
 
