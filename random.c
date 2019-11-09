@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 	int update = 0;
 
 	int c;
-	while ((c = getopt (argc, argv, "f:n:m:uwLa:p:srNh")) != -1) {
+	while ((c = getopt (argc, argv, "f:n:m:ulLa:p:srNh")) != -1) {
 		switch (c) {
 			case 'f':
 				filename = optarg;
