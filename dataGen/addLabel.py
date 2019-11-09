@@ -17,7 +17,7 @@ try:
     filePath = sys.argv[1];
     L = int(sys.argv[2]);
     dist = sys.argv[3];
-    name = filePath + "_labeled";
+    name = filePath[:-4];
 except:
     print("second param need to be integers");
     exitMain();

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
 	while ((read = getline(&line, &len, fptrIn)) != -1){
 		sscanf(line, "%u %u %u\n", &num1, &num2, &num3);
-		printf("%u %u %u\n", num1, num2, num3);
+		// printf("%u %u %u\n", num1, num2, num3);
 		fwrite(&num1, sizeof(uint32_t), 1, fptrOut);
 		fwrite(&num2, sizeof(uint32_t), 1, fptrOut);
 		fwrite(&num3, sizeof(uint32_t), 1, fptrOut);
