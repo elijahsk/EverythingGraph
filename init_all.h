@@ -8,15 +8,15 @@ extern char* has_q;
 struct input {
 	uint32_t src;
 	uint32_t dst;
-#if  WEIGHTED
-  	float  weight;
+#if  LABELED
+  	uint8_t label;
 #endif
 };
 struct edge_t {
 	uint32_t src;
 	uint32_t dst;
-#if  WEIGHTED
-	float weight;
+#if  LABELED
+	uint8_t label;
 #endif
 #if ALS_H
 	double error;
@@ -31,12 +31,12 @@ struct p_range_t{
 };
 void init(int full);
 void* quickSort(void* arg);
-size_t item_size(void);
+size_t Fitem_size(void);
 struct input *get_input(size_t pos);
 extern uint32_t P;
 
 extern int sorted_graph;
-extern int weighted_graph;
+extern int labeled_graph;
 extern int skip_loops;
 extern edge_t* memblock;
 extern char *filename;

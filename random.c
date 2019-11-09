@@ -23,11 +23,6 @@ algo_mode mode= PUSH;
 int switch_mode = 1;
 int a_mode = 0;
 
-#if defined CREATE_WEIGHT
-uint32_t* weights;
-uint32_t* weights_in;
-#endif
-
 
 static void usage(void) {
 	printf("Usage: ./random -f <graph file> -n <nb_nodes> [-m -u -r -L -w -b -a [mode] -p [bfs_root] -s -N ]\n");
@@ -39,7 +34,7 @@ static void usage(void) {
 	printf("\t\trmat25 33554432\n");
 	printf("\t\trmat27 134217728\n");
 	printf("\t-a [mode] : Algo mode, 0 PUSH, 1 PULL, (default 0)\n");
-	printf("\t-w: weighted input graph\n");
+	printf("\t-l: labeled input graph\n");
 	printf("\t-p [bfs_root]: BFS & SSSP root\n");
 	printf("\t-s:  symmetrict graph, if not given set of incoming edges will be created \n"); 
 	printf("\t-N: when running pr_numa or bfs_numa, run the NUMA aware version \n"); 
@@ -93,8 +88,8 @@ int main(int argc, char **argv) {
 				if(a_mode == 0) mode = PUSH;
 				else mode = PULL;
 				break;
-			case 'w':
-				weighted_graph = 1;
+			case 'l':
+				labeled_graph = 1;
 				break;
 			case 'p':
 				BFS_ROOT= atol(optarg);

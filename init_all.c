@@ -3,7 +3,7 @@
 
 //#if GRID
 #include"radixSort_ligra.h"
-int sorted_graph = 0, weighted_graph = 0, skip_loops = 1;
+int sorted_graph = 0, labeled_graph = 0, skip_loops = 1;
 char *filename;
 typedef pair<uint32_t,uint32_t> intPair;
 char *memblock1; // raw pointer to the file content
@@ -41,7 +41,7 @@ inline std::pair<size_t, size_t> get_partition_range(const size_t vertices, cons
 }
 
 size_t item_size(void) {
-	if(weighted_graph) {
+	if(labeled_graph) {
 		return sizeof(struct input);
 	} else {
 		return 2*sizeof(uint32_t);
@@ -96,8 +96,8 @@ void preload_graph() {
 		e->error = 0.0;
 #endif
 
-#if WEIGHTED
-		if(weighted_graph) e->weight = in->weight;
+#if LABELED
+		if(labeled_graph) e->label = in->label;
 #endif
 		if(createUndir) {
 			struct edge_t* e_rev = &memblock[i + nb_edges];
@@ -641,10 +641,7 @@ void init_adj_sort(int full, int full_sort) {
 	rdtscll(stop_adj);
 	printf("# Sort time  %lu ( %f s)\n", stop_adj - start_adj, ((float)(stop_adj - start_adj))/(float)get_cpu_freq());
 	rdtscll(start_adj);
-#if CREATE_WEIGHT
-	weights = (uint32_t*) malloc(nb_edges * sizeof(uint32_t));
-	weights_in = (uint32_t *) malloc(nb_edges * sizeof(uint32_t));
-#endif
+
 	edge_array_out[0].dst = memblock[0].dst;
 	uint64_t* edge_offsets = (uint64_t*) malloc(NB_NODES * sizeof(uint64_t)); 
 
@@ -653,18 +650,11 @@ void init_adj_sort(int full, int full_sort) {
 
 
 	edge_array_out[0].dst = memblock[0].dst;
-#if  WEIGHTED
-	if(weighted_graph) edge_array_out[0].weight = memblock[0].weight;
+#if  LABELED
+	if(labeled_graph) edge_array_out[0].label = memblock[0].label;
 	//	edge_offsets[0] = 0;
 #endif
 
-#if CREATE_WEIGHT
-
-	s = memblock[0].src % 10;
-	d =memblock[0].dst % 10;
-
-	edge_array_out[0].weight = s+d;                 
-#endif
 	if(memblock[0].src != 0) {
 		for(uint32_t i = 0; i < memblock[0].src; i++) {
 			edge_offsets[i] = 0;
@@ -674,16 +664,11 @@ void init_adj_sort(int full, int full_sort) {
 
 	parallel_for(uint64_t i = 1 ; i < nb_edges; i++) {
 		struct edge* e = &edge_array_out[i];
-#if WEIGHTED
-		if(weighted_graph) e->weight = memblock[i].weight;
+#if LABELED
+		if(labeled_graph) e->label = memblock[i].label;
 #endif
 		e->dst = memblock[i].dst;
-#if CREATE_WEIGHT
-		uint32_t s1 = memblock[i].src % 10;
-		uint32_t d1 =memblock[ i].dst % 10;
 
-		edge_array_out[i].weight = s1+d1;
-#endif
 		if(memblock[i].src != memblock[i-1].src) 
 			edge_offsets[memblock[i].src] = i;
 
@@ -726,17 +711,11 @@ void init_adj_sort(int full, int full_sort) {
 		parallel_for(uint32_t i = 0; i < NB_NODES; i++) edge_offsets_in[i] = nb_edges;
 
 		edge_array_in[0].dst = memblock[0].src;
-#if WEIGHTED
-		if(weighted_graph) edge_array_in[0].weight = memblock[0].weight;
+#if LABELED
+		if(labeled_graph) edge_array_in[0].label = memblock[0].label;
 #endif
 		edge_offsets_in[memblock[0].dst] = 0;
 
-#if CREATE_WEIGHT
-		s = memblock[0].src % 10; 
-		d =memblock[0].dst % 10;
-
-		edge_array_in[0].weight = s+d ; //(NB_NODES > s ? NB_NODES - s : s  - NB_NODES) % 10;
-#endif
 		if(memblock[0].dst != 0) {
 			for(uint32_t i = 0; i < memblock[0].dst; i++)
 				edge_offsets_in[i] = 0;
@@ -745,16 +724,10 @@ void init_adj_sort(int full, int full_sort) {
 		parallel_for(uint64_t i = 1 ; i < nb_edges; i++) {
 			struct edge* e = &edge_array_in[i];
 			e->dst = memblock[i].src;
-#if WEIGHTED
-			if(weighted_graph) e->weight = memblock[i].weight;
+#if LABELED
+			if(labeled_graph) e->label = memblock[i].label;
 #endif
-#if CREATE_WEIGHT
-			uint32_t s1 = memblock[i].src % 10; 
-			uint32_t d1 =memblock[ i].dst % 10; 
 
-			edge_array_in[i].weight = s1+d1;		
-
-#endif
 			if(memblock[i].dst != memblock[i-1].dst) 
 				edge_offsets_in[memblock[i].dst] = i;
 		}
