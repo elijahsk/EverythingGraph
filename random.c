@@ -40,7 +40,7 @@ static void usage(void) {
 	printf("\t\trmat27 134217728\n");
 	printf("\t-a [mode] : Algo mode, 0 PUSH, 1 PULL, (default 0)\n");
 	printf("\t-w: weighted input graph\n");
-	printf("\t-r [bfs_root]: BFS & SSSP root\n");
+	printf("\t-p [bfs_root]: BFS & SSSP root\n");
 	printf("\t-s:  symmetrict graph, if not given set of incoming edges will be created \n"); 
 	printf("\t-N: when running pr_numa or bfs_numa, run the NUMA aware version \n"); 
 	printf("\t-m [0 1 2 3 4 5] : default = 2 0 grid sorted; 1 grid nosort; 2 adj sorted; 3 adj nosort; 4 adjacency created without sort; 5 grid fully sorted\n"); 
