@@ -490,7 +490,7 @@ void init_adj_count(){
 	}
 
 	rdtscll(stop_adj);
-	printf("# Ad out edges create time  %lu ( %f s)\n", stop_adj - start_adj, ((float)(stop_adj - start_adj))/(float)get_cpu_freq());
+	printf("# Add out edges create time  %lu ( %f s)\n", stop_adj - start_adj, ((float)(stop_adj - start_adj))/(float)get_cpu_freq());
 	free(memblock); 
 
 }
@@ -608,7 +608,7 @@ void init_edgelist(int full, int full_sort, int sort_edge_array) {
 		nodes[i].outgoing_edges = edge_offsets[i];
 	}
 	rdtscll(stop_adj);
-	printf("# Ad out edges create time  %lu ( %f s)\n", stop_adj - start_adj, ((float)(stop_adj - start_adj))/(float)get_cpu_freq());
+	printf("# Add out edges create time  %lu ( %f s)\n", stop_adj - start_adj, ((float)(stop_adj - start_adj))/(float)get_cpu_freq());
 	//		intSort::iSort(memblock, nb_edges, NB_NODES + 1, getEdgeDst<struct edge_t>());
 
 	intSort::iSort(memblock, nb_edges, NB_NODES + 1, getEdgeSrc<struct edge_t>());
@@ -683,7 +683,7 @@ void init_adj_sort(int full, int full_sort) {
 	rdtscll(stop_adj);
 	//intSort::iSort(memblock, nb_edges, NB_NODES + 1, getEdgeDst<struct edge_t>());
 
-	printf("# Ad out edges create time  %lu ( %f s)\n", stop_adj - start_adj, ((float)(stop_adj - start_adj))/(float)get_cpu_freq());
+	printf("# Add out edges create time  %lu ( %f s)\n", stop_adj - start_adj, ((float)(stop_adj - start_adj))/(float)get_cpu_freq());
 
 	if(full_sort) {
 		rdtscll(start_adj);
