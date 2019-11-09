@@ -3,7 +3,7 @@
 
 //#if GRID
 #include"radixSort_ligra.h"
-int sorted_graph = 0, labeled_graph = 0, skip_loops = 1;
+int sorted_graph = 0, labeled_graph = 1, skip_loops = 1;
 char *filename;
 typedef pair<uint32_t,uint32_t> intPair;
 char *memblock1; // raw pointer to the file content

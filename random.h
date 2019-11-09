@@ -31,7 +31,7 @@
 
 #define NUMA 1
 #define NAIVE_SPLIT 0   // Do smarter load repartition if 0
-#define WEIGHTED 1 // set flag to 1  
+#define LABELED 1 // set flag to 1  
 extern int silent;
 extern int isSymmetric;
 extern int createUndir;
@@ -46,20 +46,14 @@ struct thread_buffer;
 
 #include ALGO_H
 #define GRID 0 
-#if WEIGHTED 
-#define weight_t typeof(((struct edge*)NULL)->weight)
+#if LABELED 
+#define label_t typeof(((struct edge*)NULL)->label)
 #else
-#define weight_t float
+#define label_t uint8_t
 
 #endif
 #define ALGO_NB_THREADS 16   // number of threads for the algorithm
 #define NB_CONCURRENCY 16 // number of concurrent threads adding/removing edges
-
-#if defined(SSSPADJ_H) 
-#define CREATE_WEIGHT 1 //THe graphs used were unweighted so we used this to create them on the fly. Remove if graph is weighted
-extern uint32_t* weights;
-extern uint32_t* weights_in;
-#endif
 
 struct algo_func {
    void (*reset)(struct node *);

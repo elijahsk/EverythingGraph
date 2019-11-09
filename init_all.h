@@ -8,14 +8,14 @@ extern char* has_q;
 struct input {
 	uint32_t src;
 	uint32_t dst;
-#if  LABELED
+#if LABELED
   	uint8_t label;
 #endif
 };
 struct edge_t {
 	uint32_t src;
 	uint32_t dst;
-#if  LABELED
+#if LABELED
 	uint8_t label;
 #endif
 #if ALS_H
