@@ -100,6 +100,13 @@ struct getEdgeDst { uint32_t operator() (E a) {
 	return a.dst;
 }
 };
+
+template <class E>
+struct getEdgeLabel{ uint8_t operator() (E a) {
+	return a.label;
+}
+};
+
 template<class E>
 struct getSecondFromPair { uintE operator() (pair<uintE, E> a) {
 	return (a.second); }

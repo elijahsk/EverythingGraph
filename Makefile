@@ -5,7 +5,7 @@ CC=g++
 LDFLAGS= -lm  -llapack -lblas -lnuma
 
 OBJ= random.o utils.o buffer.o  init_all.o
-ALGOS=bfs_simple 
+ALGOS=bfs_simple bfsgrid_cilk
 DIRS= $(patsubst %, .%, $(ALGOS))
 MK= $(patsubst %, .%/Makefile, $(ALGOS))
 

@@ -5,6 +5,7 @@
 #include "parallel_ligra.h"
 
 #define bfs_ROOT_NODE 0
+#define labelSet 7
 
 struct node* node_list;
 uint32_t* dist;
@@ -55,7 +56,8 @@ static inline void get_bfs(int i, int j)
 			struct edge_t* e = &memblock[start];
 			uint32_t src = e->src;
 			uint32_t dst = e->dst;
-			if(in_frontier[src] == 1 && dist[dst] == 0){  
+			uint8_t label = e->label;
+			if(in_frontier[src] == 1 && ((1 << label) & labelSet) && dist[dst] == 0){  
 				dist[dst] = dist[src] + 1;
 				in_frontier_next[dst] = 1;
 			}
@@ -70,7 +72,8 @@ inline int compute(uint32_t s, uint32_t stop, uint32_t i, uint32_t j) {
 		struct edge_t* e = &blocks[i][j][start];
 		uint32_t src = e->src; 
 		uint32_t dst = e->dst;
-		if(in_frontier[src] == 1 && dist[dst] == 0) {
+		uint8_t label = e->label;
+		if(in_frontier[src] == 1 && ((1 << label) & labelSet) && dist[dst] == 0) {
 			dist[dst] = dist[src] + 1;
 			in_frontier_next[dst] = 1;
 		}	
