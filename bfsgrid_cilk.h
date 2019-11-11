@@ -11,6 +11,7 @@ void bfsgrid_reset(struct node *nodes);
 void bfsgrid(struct node *nodes);
 
 struct edge {
+	uint32_t src;
     uint32_t dst;
 #if LABELED
     uint8_t label;
