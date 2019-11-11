@@ -65,6 +65,33 @@ struct getPartitionIdSrc { uintE operator() (E e) {
 
 	}
 };
+
+template<class E>
+struct getPartitionIdLabel { uintE operator() (E e) {
+	uintE n = NB_NODES;
+	if(mod_val == 0) { //n % P == 0 ) {
+
+		return e.label / partition_size; //e.src / p_size; 
+	}	
+	uint32_t v_id = e.label;
+	return (v_id < split_point) ? v_id / partition_size : (v_id - split_point) / (partition_size -1) + mod_val ; //(NB_NODES % P);  
+
+	}
+};
+
+template<class E> 
+struct getPartitionIdSrcSecondary  {uintE operator() (E e) {
+	uintE n = NB_NODES;
+	if(n % P == 0) {
+		uintE p_size = n / P;
+		return e.src / p_size;
+	}
+	uint32_t v_id = e.src;
+	size_t partition_size = NB_NODES / P + 1; 
+	size_t split_point = NB_NODES % P * partition_size; 
+	return (v_id < split_point) ? v_id / partition_size : (v_id - split_point) / (partition_size -1) + (NB_NODES % P);  
+}
+};
 //#if GRID
 template<class E>
 struct getPartitionDouble { uintE operator() (E e) {
@@ -73,6 +100,16 @@ struct getPartitionDouble { uintE operator() (E e) {
 	uintE p_src = psrc(e);
 	uintE p_dst = pdst(e);
 	return p_src * P + p_dst;
+}
+};
+
+template<class E>
+struct getPartitionLabelDouble { uintE operator() (E e) {
+	getPartitionIdLabel<struct edge_t> plabel;
+	getPartitionIdSrcSecondary<struct edge_t> psrc;
+	uintE p_label = plabel(e);
+	uintE p_src = psrc(e);
+	return p_label * P + p_src;
 }
 };
 

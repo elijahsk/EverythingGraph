@@ -433,7 +433,7 @@ void init_grid_sort_by_label_src(int full) {
 				struct edge_t* e = &memblock[row_offsets[i] + start];
 				uint32_t psrc = get_partition_id(e->src);
 				uint32_t pprev = get_partition_id(memblock[row_offsets[i] + start - 1].src);
-				if(pdst != pprev) {
+				if(psrc != pprev) {
 					offsets[i][psrc] = start;
 				}
 
