@@ -1052,7 +1052,7 @@ void init(int full) {
 			init_adj_sort(0, 0);
 			break;
 		case 3: //adj created with sort and fully sorted within 
-			init_adj_sort(full, 0);
+			init_adj_sort(full, 1);
 			break;
 
 		case 4: //adj list created on load; arg = 0 -> dynamic; arg = 1 -> count sort 
