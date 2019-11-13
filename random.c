@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
 		rdtscll(load_stop);
 		printf ("#Total reset  time  %lu ( %fs )\n", load_stop - load_start, ((float)(load_stop - load_start))/(float)get_cpu_freq());
 
-		current_algo.main(nodes);
+		current_algo.main(nodes, labelSet);
 	}
 	rdtscll(stop);
 	printf("#Total algo time %lu ( %fs )\n", stop - start, ((float)(stop - start))/(float)get_cpu_freq());

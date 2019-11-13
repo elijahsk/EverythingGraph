@@ -23,5 +23,4 @@ extern struct node* node_list;
 extern uint32_t* dist;
 
 
-
 #endif //GRAPH_UP_BFS_LIGRA_H

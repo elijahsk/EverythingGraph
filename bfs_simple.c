@@ -10,7 +10,6 @@ uint32_t* dist;
 uint8_t labelSet;
 
 
-
 static void print_stats(void);
 
 static struct thread_stats {
