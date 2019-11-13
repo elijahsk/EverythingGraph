@@ -57,7 +57,7 @@ struct thread_buffer;
 
 struct algo_func {
    void (*reset)(struct node *);
-   void (*main)(struct node *, uint8_t labelSet);
+   void (*main)(struct node *, uint8_t labels);
      void (*construct)(void);
    void (*destruct)(void);
 };

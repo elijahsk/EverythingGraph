@@ -6,7 +6,7 @@ int createUndir = 0;
 int not_processed = 1; 
 int load_mode = 2;
 int numa = 0;
-uint8_t labelSet = 0;
+uint8_t labels = 0;
 algo_t algo_phase = ALGO;  
 volatile int parallels_done; 
 volatile int waiting;       
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 				else mode = PULL;
 				break;
 			case 'l':
-				labelSet = atoi(optarg);
+				labels = atoi(optarg);
 				break;
 			case 'p':
 				BFS_ROOT= atol(optarg);
@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
 		rdtscll(load_stop);
 		printf ("#Total reset  time  %lu ( %fs )\n", load_stop - load_start, ((float)(load_stop - load_start))/(float)get_cpu_freq());
 
-		current_algo.main(nodes, labelSet);
+		current_algo.main(nodes, labels);
 	}
 	rdtscll(stop);
 	printf("#Total algo time %lu ( %fs )\n", stop - start, ((float)(stop - start))/(float)get_cpu_freq());
