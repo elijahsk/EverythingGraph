@@ -7,6 +7,7 @@
 
 struct node* node_list;
 uint32_t* dist;
+uint8_t labelSet = 0;
 
 
 

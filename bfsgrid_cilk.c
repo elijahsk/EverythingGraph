@@ -5,11 +5,11 @@
 #include "parallel_ligra.h"
 
 #define bfs_ROOT_NODE 0
-#define labelSet 7
 
 struct node* node_list;
 uint32_t* dist;
 int switched =0;
+uint8_t labelSet = 7;
 
 static void print_stats(void);
 
@@ -190,7 +190,7 @@ void bfsgrid(struct node *nodes, uint8_t labels) {
 	dist[BFS_ROOT] = 1;
 	in_frontier[BFS_ROOT] = 1;
 	labelSet = labels;
-	
+
 	items_in_frontier = 1;
 	uint32_t proot = get_partition_id(BFS_ROOT);
 	active[proot] = 1;

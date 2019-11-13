@@ -106,7 +106,6 @@ extern uint32_t items_in_frontier;
 extern uint32_t front_degree;
 extern char* in_frontier;
 extern char* in_frontier_next;
-extern uint8_t labelSet;
 typedef enum {
 		PUSH,
 		PULL

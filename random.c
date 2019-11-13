@@ -6,6 +6,7 @@ int createUndir = 0;
 int not_processed = 1; 
 int load_mode = 2;
 int numa = 0;
+uint8_t labelSet = 0;
 algo_t algo_phase = ALGO;  
 volatile int parallels_done; 
 volatile int waiting;       

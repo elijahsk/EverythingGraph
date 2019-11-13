@@ -21,7 +21,6 @@ struct edge {
 
 extern struct node* node_list;
 extern uint32_t* dist;
-extern uint8_t labelSet;
 
 
 
