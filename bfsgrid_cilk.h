@@ -19,6 +19,7 @@ struct edge {
 };
 
 extern uint32_t* dist;
+extern uint8_t labelSet;
 
 
 

@@ -174,7 +174,7 @@ void bfsgrid_reset(struct node *nodes) {
 /*
  * Default function that launches a bfs from node 0
  */
-void bfsgrid(struct node *nodes, uint8_t labels) {
+void bfsgrid(struct node *nodes) {
 	uint64_t construct_start, construct_stop;
 
 	rdtscll(construct_start);	
@@ -189,8 +189,7 @@ void bfsgrid(struct node *nodes, uint8_t labels) {
 	node_list = nodes;
 	dist[BFS_ROOT] = 1;
 	in_frontier[BFS_ROOT] = 1;
-	labelSet = labels;
-	
+
 	items_in_frontier = 1;
 	uint32_t proot = get_partition_id(BFS_ROOT);
 	active[proot] = 1;

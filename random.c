@@ -25,20 +25,13 @@ int a_mode = 0;
 
 
 static void usage(void) {
-	printf("Usage: ./random -f <graph file> -n <nb_nodes> [-m -u -r -L -w -b -a [mode] -p [bfs_root] -s -N ]\n");
-	printf("\t-u: create undirected on load (For example for WCC running with load mode 2 or 3)\n");
+	printf("Usage: ./random -f <graph file> -n <nb_nodes> [-m [data mode] -r -l [labelSet] -a [algo mode] -N ]\n");
 	printf("\t-r [switch]: switch between PUSH and PULL where applicable (default 1)\n");
-	printf("\t-n: NB_NODES, e.g.,\n");
-	printf("\t\trmat20 1048576\n");
-	printf("\t\trmat23 8388608\n");
-	printf("\t\trmat25 33554432\n");
-	printf("\t\trmat27 134217728\n");
+	printf("\t-n: NB_NODES \n");
 	printf("\t-a [mode] : Algo mode, 0 PUSH, 1 PULL, (default 0)\n");
-	printf("\t-l: labeled input graph\n");
-	printf("\t-p [bfs_root]: BFS & SSSP root\n");
-	printf("\t-s:  symmetrict graph, if not given set of incoming edges will be created \n"); 
+	printf("\t-l: labelSet \n");
 	printf("\t-N: when running pr_numa or bfs_numa, run the NUMA aware version \n"); 
-	printf("\t-m [0 1 2 3 4 5] : default = 2 0 grid sorted; 1 grid nosort; 2 adj sort by src only; 3 adj sort by src and dst; 4 adjacency created without sort; 5 grid fully sorted\n"); 
+	printf("\t-m [0 1 2 3 4 5 6 7 8 9] : default = 2 0 grid sorted; 1 grid nosort; 2 adj sort by src only; 3 adj sort by src and dst;\n\t\t 4 adjacency created without sort; 5 grid fully sorted; 6 grid sort by source; \n \t\t7 edge array sort by source 8 edge array sort by source then dst 9 edge array no sort\n"); 
 	_exit(-1);
 }
 
@@ -89,7 +82,7 @@ int main(int argc, char **argv) {
 				else mode = PULL;
 				break;
 			case 'l':
-				labeled_graph = 1;
+				labelSet = atoi(optarg);
 				break;
 			case 'p':
 				BFS_ROOT= atol(optarg);
