@@ -248,6 +248,146 @@ void init_grid_sort_src(int full, int sort_by_src) {
 
 }
 
+void init_grid_sort_src_label(int full) {
+	offsets = (uint32_t**) malloc (P * sizeof(uint32_t*));
+
+	for(size_t i =0; i< P; i++) {
+		offsets[i] = (uint32_t*) malloc(P* sizeof(uint32_t));
+	}
+
+
+	for(size_t i = 0; i < P; i++) {
+		for(size_t j = 0; j < P; j++) {
+			offsets[i][j] = 0;
+		}  
+	}
+
+
+	rdtscll(init_start);
+	if(not_processed) {
+
+
+		parallel_for(uint32_t i = 0; i < P; i++) { row_offsets[i] = nb_edges;}
+
+		//Fully sort by source first
+		rdtscll(load_start);
+
+		intSort::iSort(memblock, nb_edges, NB_NODES + 1, getEdgeSrc<struct edge_t>()); //PartitionIdSrc<struct edge_t>());//EdgeSrc<struct edge_t>());
+		rdtscll(load_stop);
+		printf("#Sort by src time by src %f \n" , (float)(load_stop-load_start) / (float)get_cpu_freq());
+		row_offsets[0] = 0; 
+
+		rdtscll(load_start);
+		parallel_for(uint32_t i = 1 ; i < nb_edges; i++) {
+			struct edge_t* e = &memblock[i];
+			uint32_t psrc = get_partition_id(e->dst);
+			uint32_t pprev = get_partition_id(memblock[i-1].dst);
+			if(psrc != pprev) {
+				row_offsets[psrc] = i;
+			} 
+		}
+
+
+		rdtscll(load_stop);
+
+		printf("# Offset big  time by src %f \n" , (float)(load_stop-load_start) / (float)get_cpu_freq());			
+		rdtscll(load_start);
+		sequence::scanIBack(row_offsets,row_offsets,(int)P,minF<uintT>(),(uintT)nb_edges);   
+		rdtscll(load_stop);
+		printf("#Sequence big time by src %f \n" , (float)(load_stop-load_start) / (float)get_cpu_freq());
+
+		uint32_t* node_offsets = (uint32_t* ) malloc(NB_NODES * sizeof(uint32_t));
+
+		rdtscll(load_start);
+		parallel_for (uint32_t i = 0; i < NB_NODES; i ++) node_offsets[i] = nb_edges;
+		node_offsets[memblock[0].src] = 0;
+		if(memblock[0].src != 0) {
+			uint32_t i = 0;
+			while (i < memblock[0].src) 
+				node_offsets[i++] = 0;
+		}
+		parallel_for(uint32_t i = 1; i < nb_edges; i++ ) {
+			uint32_t src = memblock[i].dst;
+			uint32_t prev = memblock[i-1].dst;
+			if(src != prev) {
+				node_offsets[src] = i;
+
+			}
+		}
+		sequence::scanIBack(node_offsets,node_offsets,(int)NB_NODES,minF<uintT>(),(uintT)nb_edges);   
+
+
+		parallel_for(uint32_t i = 0; i < NB_NODES; i++) {
+			nodes[i].nb_out_edges = i == NB_NODES -1 ? nb_edges : node_offsets[i+1] - node_offsets[i];
+		}
+		rdtscll(load_stop);
+		printf("#Out degree count %f \n" , (float)(load_stop-load_start) / (float)get_cpu_freq());  
+		free(node_offsets);
+		rdtscll(load_start);
+
+
+		parallel_for(uint32_t i = 0; i < P; i++) {
+			uint32_t o = row_offsets[i];
+			uint32_t l = ((i == P - 1) ? nb_edges - row_offsets[i] : row_offsets[i+1] - row_offsets[i]) ;  
+			if (l != 0) 
+				intSort::iSort(memblock + row_offsets[i],l, NB_NODES + 1, getEdgeSrc<struct edge_t>()); // getPartitionIdDst<struct edge_t>());
+		}
+		rdtscll(load_stop);
+		printf("#Sort by dst time - by src %f \n" , (float)(load_stop-load_start) / (float)get_cpu_freq());
+		parallel_for(uint32_t i = 0; i < P; i++) 
+			for(uint32_t j = 0; j < P; j++) 
+				offsets[i][j] = nb_edges+1  ;
+
+		rdtscll(load_start);	
+		for(uint32_t i = 0; i < P; i++) {
+			uint32_t start, idx;
+			offsets[0][i] =0 ;
+			uint32_t stop = ( i == P - 1?  nb_edges  : row_offsets[i + 1] ) - row_offsets[i];
+			parallel_for(uint32_t start = 1;  start < stop; start++) {
+				struct edge_t* e = &memblock[row_offsets[i] + start];
+				uint32_t pdst = get_partition_id(e->src);
+				uint32_t pprev = get_partition_id(memblock[row_offsets[i] + start - 1].src);
+				if(pdst != pprev) {
+					offsets[pdst][i] = start;
+				}
+
+			} 
+		}
+
+
+		rdtscll(load_stop);
+		printf("#Offset dst time - by src %f \n" , (float)(load_stop-load_start) / (float)get_cpu_freq());
+		rdtscll(load_start);
+		for(int j = P - 1; j >=0 ; j--) {
+			for(int i = P - 1; i>= 0 ; i--) {
+				if(offsets[i][j] == nb_edges  + 1){
+					offsets[i][j] = ( i == P-1 ? (j == P-1 ? nb_edges : row_offsets[j+1]) : offsets[i+1][j]); 
+				}
+				//	sequence::scanIBack(offsets[i], offsets[i], (int)P, minF<uintT>(), (uintT)(i == P - 1 ? nb_edges - row_offsets[i] : row_offsets[i+1] - row_offsets[i]));
+			}
+		}
+		rdtscll(load_stop);
+		printf("#Seq dst time - by src %f \n" , (float)(load_stop-load_start) / (float)get_cpu_freq());
+		rdtscll(init_stop);
+		printf("#Total grid create time %lu ( %f s)\n", init_stop - init_start, ((float)(init_stop - init_start))/(float)get_cpu_freq());
+		/*	if(sort_by_src){
+			rdtscll(load_start);
+			parallel_for(int i = 0; i < P; i++) {
+			for(int j = 0; j < P; j ++) {
+			uint32_t start = row_offsets[i] + offsets[i][j];
+			uint32_t stop = (j == P-1 ? (i == P -1 ? nb_edges : row_offsets[i+1]) : row_offsets[i] + offsets[i][j+1] ) ;
+			intSort::iSort(memblock + start,stop - start, NB_NODES + 1, getEdgeSrc<struct edge_t>());
+			}
+			}
+			rdtscll(load_stop);
+			printf("#Sort cells by src time %lu ( %f s)\n", load_stop - load_start, ((float)(load_stop - load_start))/(float)get_cpu_freq());
+
+
+			} */
+	}
+
+}
+
 
 void init_grid_sort(int full, int sort_by_src) {
 	offsets = (uint32_t**) malloc (P * sizeof(uint32_t*));

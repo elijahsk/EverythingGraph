@@ -9,7 +9,7 @@
 struct node* node_list;
 uint32_t* dist;
 int switched =0;
-uint8_t labelSet = 7;
+uint8_t labelSet;
 
 static void print_stats(void);
 

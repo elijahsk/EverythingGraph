@@ -4,10 +4,10 @@
 #include "parallel_ligra.h"
 
 #define BFS_ROOT 0
+#define labelSet 7
 
 struct node* node_list;
 uint32_t* dist;
-uint8_t labelSet;
 
 
 
@@ -237,7 +237,7 @@ void bfs_reset(struct node *nodes) {
 /*
  * Default function that launches a bfs from node 0
  */
-void bfs(struct node *nodes, uint8_t labels) {
+void bfs(struct node *nodes) {
 	uint64_t construct_start, construct_stop;
 
 
@@ -246,7 +246,6 @@ void bfs(struct node *nodes, uint8_t labels) {
 	node_list = nodes;
 	dist[BFS_ROOT] = 1;
 	in_frontier[BFS_ROOT] = 1;
-	labelSet = labels;
 
 	items_in_frontier = 1;
 	if(!get_task_list())
