@@ -20,7 +20,6 @@ try:
     p.append(sys.argv[3]);
     for i in range(4, len(sys.argv)):
         p.append(sys.argv[i] + p[-1]);
-    print(p)；
     name = filePath[:-4] + "_2_" + str(p)
 except:
     print("Invalid argument(s)")
