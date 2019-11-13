@@ -17,11 +17,8 @@ try:
     filePath = sys.argv[1];
     noOfLabels = int(sys.argv[2]);
     p = [0];
-    p.append(sys.argv[3]);
-    for i in range(4, len(sys.argv)):
-        p.append(sys.argv[i] + p[-1]);
-
-    name = filePath[:-4] + "_2_" + str(p)
+    for i in range(3, len(sys.argv)):
+        p.append(float(sys.argv[i]) + p[-1]);
 
 except:
     print("Invalid argument(s)")
@@ -45,11 +42,11 @@ while line:
 
     for i in range(len(p) - 1):
         if (p[i] <= randValue < p[i + 1]):
-            label = i; 
+            label = int(i); 
             break;
 
     if label == -1:    
-        label = random.uniform(len(p), noOfLabels);
+        label = int(random.uniform(len(p), noOfLabels));
 
     dgraph.append((node1, node2, label));
 
