@@ -44,7 +44,6 @@ extern size_t nb_edges;
 extern uint32_t NB_NODES;
 extern struct node *nodes;
 extern uint32_t BFS_ROOT;
-extern uint8_t labelSet;
 
 #if NUMA
 // **** NUMA
