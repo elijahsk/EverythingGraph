@@ -10,7 +10,7 @@ def exitMain():
     sys.exit(1);
 
 if(len(sys.argv) != 4):
-    print("usage python2.7 " + sys.argv[0] + " unlabeled_file_path  possibility of 1st label [0 - 1]");
+    print("usage python2.7 " + sys.argv[0] + " unlabeled_file_path possibility of 1st label [0 - 1]");
     exitMain();
 
 try:

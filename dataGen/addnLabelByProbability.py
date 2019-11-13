@@ -9,14 +9,18 @@ from operator import itemgetter
 def exitMain():
     sys.exit(1);
 
-if(len(sys.argv) != 4):
-    print("usage python2.7 " + sys.argv[0] + " unlabeled_file_path no_of_labels possibility_of_1st_label[0 - 1]");
+if(len(sys.argv) <= 4):
+    print("usage python2.7 " + sys.argv[0] + " unlabeled_file_path no_of_labels P_1st_label[0-1] P_2nd_label[0-1] ...");
     exitMain();
 
 try:
     filePath = sys.argv[1];
     noOfLabels = int(sys.argv[2]);
-    p = float(sys.argv[3]);
+    p = [0];
+    p.append(sys.argv[3]);
+    for i in range(4, len(sys.argv)):
+        p.append(sys.argv[i] + p[-1]);
+    print(p)；
     name = filePath[:-4] + "_2_" + str(p)
 except:
     print("Invalid argument(s)")
@@ -38,10 +42,15 @@ while line:
 
     randValue = random.random();
 
-    if (randValue <= p):
-        label = 0;
-    else:
-        label = random.uniform(1,L);
+    label = -1;
+
+    for i in range(len(p) - 1):
+        if (p[i] <= randValue < p[i + 1]):
+            label = i; 
+            break;
+            
+    if label == -1:    
+        label = random.uniform(len(p), noOfLabels);
 
     dgraph.append((node1, node2, label));
 
