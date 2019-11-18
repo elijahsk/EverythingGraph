@@ -21,6 +21,7 @@ uint32_t* active;
 uint32_t* active_next;
 uint32_t no_active = 0;
 uint32_t activated = 0;
+uint8_t labelSet;
 struct  per_thread_task {
 	uint32_t* task_array;
 	uint32_t curr;
@@ -254,7 +255,8 @@ b:
 			uint32_t src = active[start];
 			for(uint32_t idx = 0; idx < nodes[src].nb_out_edges; idx++) {
 				uint32_t dst_id = edge_array_out[nodes[src].outgoing_edges + idx].dst;
-				if(parent[dst_id] == NB_NODES && __sync_bool_compare_and_swap(&parent[dst_id], NB_NODES, src))  {
+				uint8_t label = edge_array_out[nodes[src].outgoing_edges + idx].label;
+				if(parent[dst_id] == NB_NODES && ((1 << label) & labelSet) && __sync_bool_compare_and_swap(&parent[dst_id], NB_NODES, src))  {
 
 					per_thread_tasks[thread_id].task_array[per_thread_tasks[thread_id].curr++] = dst_id;
 					if(per_thread_tasks[thread_id].curr == 1024) {
@@ -304,7 +306,8 @@ bfs_begin:
 			assert(src < NB_NODES);
 			for(uint32_t e_idx = 0; e_idx < edge_part_degree[node][src]; e_idx++) {
 				uint32_t dst_id = edge_array_numa[node][edge_part_offsets[node][src] + e_idx].dst;
-				if(parent[dst_id] == NB_NODES && __sync_bool_compare_and_swap(&parent[dst_id], NB_NODES, src))  {
+				uint8_t label = edge_array_numa[node][edge_part_offsets[node][src] + e_idx].label;
+				if(parent[dst_id] == NB_NODES && ((1 << label) & labelSet) && __sync_bool_compare_and_swap(&parent[dst_id], NB_NODES, src))  {
 					per_thread_tasks[thread_id].task_array[per_thread_tasks[thread_id].curr++] = dst_id;
 					if(per_thread_tasks[thread_id].curr == 1024) {
 						per_thread_tasks[thread_id].curr = 0;
@@ -331,7 +334,8 @@ bfs_begin:
 				assert(src < NB_NODES);
 				for(uint32_t e_idx = 0; e_idx < edge_part_degree[n_steal][src]; e_idx++) {
 					uint32_t dst_id = edge_array_numa[n_steal][edge_part_offsets[n_steal][src] + e_idx].dst;
-					if(parent[dst_id] == NB_NODES && __sync_bool_compare_and_swap(&parent[dst_id], NB_NODES, src))  {
+					uint8_t label = edge_array_numa[n_steal][edge_part_offsets[n_steal][src] + e_idx].label;
+					if(parent[dst_id] == NB_NODES && ((1 << label) & labelSet) && __sync_bool_compare_and_swap(&parent[dst_id], NB_NODES, src))  {
 						per_thread_tasks[thread_id].task_array[per_thread_tasks[thread_id].curr++] = dst_id;
 						if(per_thread_tasks[thread_id].curr == 1024) {
 							per_thread_tasks[thread_id].curr = 0;
@@ -351,7 +355,8 @@ bfs_begin:
 	wait_b(&x_sync);
 	if(tid != 0 ) goto bfs_begin;
 }
-inline  void bfsnuma(struct node* nodes){
+inline  void bfsnuma(struct node* nodes, uint8_t labels){
+	labelSet = labels;
 
 	if(numa) {
 		for(int i = 0; i < NUMA_PART; i++)

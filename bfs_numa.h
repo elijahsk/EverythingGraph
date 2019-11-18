@@ -9,6 +9,7 @@ void bfsnuma_reset(struct node *nodes);
 
 struct edge{
 	uint32_t dst;
+	uint32_t src;
 #if LABELED
 	uint8_t label;
 #endif
