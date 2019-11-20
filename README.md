@@ -20,9 +20,16 @@ To compile the code, enter the repository and run command <code> make </code>.
 The input file is a graph dataset encoded as a binary file. 
 
 Such input file can be generated in the following steps:
-*Enter repository
-*Enter command <code> dataGen/PaRMAT/Release/PaRMAT -nVertices [no. of vertices] -nEdges [no. of edges]</code>, where [no. of vertices] and [no. of edges] are integer values to be filled in. This command generate a text graph file named <strong>out.txt</strong> with the specified number of vertices and number of labels.
-*Enter command <code>dataGen/addnLabelsByProbability.py out.txt [no. of labels] [p1] [p2] ...</code>, where [no. of labels] is an integer value indicating the number of labels to be put in the graph, and [p1], [p2], ..., [pn], are float values indicating the probability of having the 1st, 2nd, ..., nth label.
+
+1. Enter repository
+
+2. Enter command <code> dataGen/PaRMAT/Release/PaRMAT -nVertices [no. of vertices] -nEdges [no. of edges]</code>, where [no. of vertices] and [no. of edges] are integer values to be filled in. 
+
+This command generates a text file named <strong>out.txt</strong> with the specified number of vertices and number of labels.
+
+3. Enter command <code>dataGen/addnLabelsByProbability.py out.txt [no. of labels] [p1] [p2] ...</code>, where [no. of labels] is an integer value indicating the number of labels to be put in the graph, and [p1], [p2], ..., [pn], are float values indicating the probability of having the 1st, 2nd, ..., nth label. 
+
+This command generates a text file named <strong>out</strong> with edge data from <strong>out.txt</strong> and additional labeled data
 
 <h1>Running the code</h1>
 
