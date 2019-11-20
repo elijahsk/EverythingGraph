@@ -35,6 +35,8 @@ To run the code you need to call the corresponding algorithm binary with a numbe
 
 <code>./algorithm_binary –n [no. of vertices] –f [path to binary graph data] -l [labelSet] [other optional commands]</code>
 
+[labelSet] is an integer value between 1 and 255. This value is interpreted as a binary value e.g. entering value 7 gives a labelSet of 00000111, indicating that the labelSet contains the 1st, 2nd and 3rd label.
+
 Help message on other optional command will be displayed when the algorithm_binary is not run with the essential commands.
 
 The available algorithm_binary are <strong>bfs_simple</strong>, <strong>bfsgrid_cilk</strong>, and <strong>bfs_numa</strong>.
